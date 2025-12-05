@@ -14,7 +14,7 @@ from src.services.auth_service import AuthService
 from src.services.email_service import get_email_service
 from src.services.oauth_service import OAuthService
 from src.models.user import User, UserRole
-from src.models.base import get_session
+from src.utils.database import get_async_db_session as get_session
 
 logger = get_logger(__name__)
 auth_bp = Blueprint("auth", __name__)
@@ -91,7 +91,7 @@ async def register() -> Dict[str, Any]:
         session.add(new_user)
 
         try:
-            await session.commit()
+            await session.flush()
             await session.refresh(new_user)
 
             logger.info(
@@ -188,7 +188,7 @@ async def login() -> Dict[str, Any]:
 
         # Update last login timestamp
         user.last_login = datetime.utcnow()
-        await session.commit()
+        await session.flush()
 
         logger.info("User logged in successfully", extra={"user_id": user.id, "email": email})
 
@@ -329,7 +329,7 @@ async def oauth_github_callback() -> Dict[str, Any]:
                 session.add(user)
                 logger.info("New user created via GitHub OAuth", extra={"email": github_profile["email"]})
 
-        await session.commit()
+        await session.flush()
         await session.refresh(user)
 
         # Generate JWT tokens
@@ -352,7 +352,7 @@ async def oauth_github_callback() -> Dict[str, Any]:
 
         # Update last login
         user.last_login = datetime.utcnow()
-        await session.commit()
+        await session.flush()
 
         logger.info("GitHub OAuth successful", extra={"user_id": user.id})
 
@@ -456,7 +456,7 @@ async def oauth_google_callback() -> Dict[str, Any]:
                 session.add(user)
                 logger.info("New user created via Google OAuth", extra={"email": google_profile["email"]})
 
-        await session.commit()
+        await session.flush()
         await session.refresh(user)
 
         # Generate JWT tokens
@@ -479,7 +479,7 @@ async def oauth_google_callback() -> Dict[str, Any]:
 
         # Update last login
         user.last_login = datetime.utcnow()
-        await session.commit()
+        await session.flush()
 
         logger.info("Google OAuth successful", extra={"user_id": user.id})
 
@@ -596,7 +596,7 @@ async def verify_email() -> Dict[str, Any]:
 
         # Mark email as verified
         user.email_verified = True
-        await session.commit()
+        await session.flush()
 
         logger.info("Email verified successfully", extra={"user_id": user.id, "email": email})
 
@@ -713,7 +713,7 @@ async def confirm_password_reset() -> Dict[str, Any]:
 
         # Update password
         user.password_hash = new_password_hash
-        await session.commit()
+        await session.flush()
 
         logger.info("Password reset successful", extra={"user_id": user.id, "email": email})
 

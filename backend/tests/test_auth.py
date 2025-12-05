@@ -246,7 +246,7 @@ async def test_verify_email_success(client, db_session):
         from src.services.auth_service import AuthService
         user = User(
             email="verify@example.com",
-            password_hash=AuthService.hash_password("P@ssw0rd123"),
+            password_hash=AuthService.hash_password("P@ssw0rd1234"),
             name="Verify User",
             role=UserRole.STUDENT,
             email_verified=False,
@@ -411,7 +411,7 @@ async def test_refresh_token_success(client, db_session):
         from src.services.auth_service import AuthService
         user = User(
             email="refresh@example.com",
-            password_hash=AuthService.hash_password("P@ssw0rd123"),
+            password_hash=AuthService.hash_password("P@ssw0rd1234"),
             name="Refresh User",
             role=UserRole.STUDENT,
             email_verified=True,

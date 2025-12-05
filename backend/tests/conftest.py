@@ -15,17 +15,18 @@ from src.app import create_app
 TEST_DATABASE_URL = "postgresql+asyncpg://annhoward@localhost:5432/codementor_test"
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def event_loop():
     """
     Create event loop for async tests.
     """
-    loop = asyncio.get_event_loop_policy().new_event_loop()
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     yield loop
     loop.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def test_engine():
     """
     Create test database engine for the entire test session.

@@ -202,12 +202,13 @@ def create_app(config_override: Optional[dict] = None) -> Quart:
             }
         )
 
+    # Register error handlers
+    from .middleware.error_handler import register_error_handlers
+    register_error_handlers(app)
+
     # Register blueprints (routes)
-    # TODO: Import and register route blueprints here
-    # from .api import auth_bp, users_bp, exercises_bp
-    # app.register_blueprint(auth_bp, url_prefix="/api/v1/auth")
-    # app.register_blueprint(users_bp, url_prefix="/api/v1/users")
-    # app.register_blueprint(exercises_bp, url_prefix="/api/v1/exercises")
+    from .api import register_blueprints
+    register_blueprints(app)
 
     logger.info(
         "Quart application created successfully",

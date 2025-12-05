@@ -27,6 +27,14 @@ class GroqProvider(BaseLLMProvider):
 
     # GROQ pricing per 1M tokens (as of December 2025)
     PRICING = {
+        "groq/compound": {
+            "prompt": 0.79,  # Compound system pricing
+            "completion": 0.99,
+        },
+        "groq/compound-mini": {
+            "prompt": 0.59,  # Mini version
+            "completion": 0.79,
+        },
         "llama-3.3-70b-versatile": {
             "prompt": 0.59,  # per 1M tokens
             "completion": 0.79,  # per 1M tokens

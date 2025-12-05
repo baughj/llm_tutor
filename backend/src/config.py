@@ -32,7 +32,7 @@ class Settings(BaseSettings):
 
     # JWT
     jwt_secret_key: str = Field(..., env="JWT_SECRET_KEY")
-    jwt_algorithm: str = Field(default="RS256", env="JWT_ALGORITHM")
+    jwt_algorithm: str = Field(default="HS256", env="JWT_ALGORITHM")
     jwt_access_token_expire_hours: int = Field(default=24, env="JWT_ACCESS_TOKEN_EXPIRE_HOURS")
     jwt_refresh_token_expire_days: int = Field(default=30, env="JWT_REFRESH_TOKEN_EXPIRE_DAYS")
 
@@ -53,6 +53,7 @@ class Settings(BaseSettings):
 
     # GROQ-specific settings
     groq_model: str = Field(default="llama-3.3-70b-versatile", env="GROQ_MODEL")
+    groq_compound_model: str = Field(default="groq/compound", env="GROQ_COMPOUND_MODEL")
     groq_rate_limit_rpm: int = Field(default=30, env="GROQ_RATE_LIMIT_RPM")  # requests per minute
     groq_rate_limit_rpd: int = Field(default=14400, env="GROQ_RATE_LIMIT_RPD")  # requests per day
     groq_max_retries: int = Field(default=3, env="GROQ_MAX_RETRIES")
