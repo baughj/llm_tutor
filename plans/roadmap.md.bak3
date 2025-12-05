@@ -1,0 +1,1234 @@
+# LLM Coding Tutor Platform - Phased Parallel Execution Roadmap
+
+## Document Version: 1.1
+## Date: 2025-12-05
+## Focus: Parallelization and Concurrent Development
+
+---
+
+## Executive Summary
+
+This roadmap organizes the LLM Coding Tutor Platform development into phases with **maximum parallelization opportunities**. Each phase identifies independent work streams that multiple agents/teams can execute simultaneously, reducing overall delivery time.
+
+**Key Principles:**
+- **Maximize Concurrent Work**: Identify independent components that can be built in parallel
+- **Clear Dependencies**: Block parallel work only when truly necessary
+- **Work Stream Organization**: Group tasks by technical domain for efficient agent assignment
+- **Integration Points**: Define clear handoff moments between streams
+
+---
+
+## Project Status Update
+
+**Last Updated**: 2025-12-05
+
+### Completed Work Streams
+- **A1: Infrastructure Setup** ✅ (Completed 2025-12-05)
+  - Complete GCP infrastructure: Cloud SQL PostgreSQL 15, Memorystore Redis 7.0
+  - VPC networking with private IP configuration
+  - Cloud Run application platform with VPC Connector
+  - CI/CD pipeline via Cloud Build with automated deployments
+  - Monitoring, logging, and Secret Manager integration
+  - Backend Dockerfile and deployment scripts ready
+  - Ready for backend deployment to Cloud Run
+
+- **A2: Backend Framework Setup** ✅ (Completed 2025-12-05)
+  - Full async Quart framework with 6 API blueprints, 40+ endpoints
+  - Async SQLAlchemy with 4 models and Alembic migrations
+  - Complete middleware stack (CORS, error handling, logging)
+  - OpenAPI/Swagger documentation at /docs
+  - Ready for Stage 2 work streams (B1, B2, B3)
+
+### Ready to Start (Dependencies Met)
+- **B1: Authentication System** - A1 & A2 dependencies satisfied, infrastructure ready for deployment
+- **B2: LLM Integration Layer** - A1 & A2 dependencies satisfied, infrastructure ready for deployment
+- **B3: Database Schema & Models** - A1 & A2 dependencies satisfied, database provisioned and ready
+
+### In Progress
+- None
+
+### Pending (Awaiting Dependencies)
+- **A3: Frontend Framework Setup** - Can start immediately (no dependencies)
+- **A4: Design System & Wireframes** - Can start immediately (no dependencies)
+- **B4: Authentication UI** - Requires A3, A4 completion
+
+---
+
+## Phase 0: MVP Foundation
+
+### Stage 1: Infrastructure & Foundation
+
+**Goal**: Set up development environment and core infrastructure that all other work streams depend on.
+
+#### Work Stream A1: Infrastructure Setup ✅ COMPLETED 2025-12-05
+**Agent**: DevOps Engineer
+**Can Start**: Immediately
+**Dependencies**: None
+
+**Tasks:**
+- [x] Cloud infrastructure provisioning (GCP)
+- [x] PostgreSQL database setup with initial schema (Cloud SQL PostgreSQL 15)
+- [x] Redis caching layer setup (Memorystore Redis 7.0)
+- [x] Environment configuration (dev, staging, production)
+- [x] CI/CD pipeline (Cloud Build with automated deployments)
+- [x] Monitoring and logging (GCP Cloud Logging, Cloud Monitoring)
+- [x] Domain and SSL certificate setup (Cloud Run managed certificates)
+
+**Deliverable**: Deployed infrastructure ready for application code ✅
+
+**Completion Summary:**
+- **Database**: Cloud SQL PostgreSQL 15 (private IP, us-central1, 2 vCPU/7.5GB RAM)
+- **Cache**: Memorystore Redis 7.0 (1GB, VPC-only networking)
+- **Platform**: Cloud Run with VPC Connector for private networking
+- **Network**: Custom VPC (10.128.0.0/20) with firewall rules and Cloud SQL peering
+- **CI/CD**: Cloud Build pipeline with automated Docker build and deploy
+- **Security**: All credentials in Secret Manager, private IP configuration
+- **Monitoring**: Cloud Logging with 30-day retention, alert configurations ready
+- **Documentation**: Complete setup guides in `/infrastructure/gcp/README.md`
+
+**Files Created:**
+- Infrastructure scripts: `/infrastructure/gcp/scripts/` (7 deployment scripts)
+- Configuration: `/infrastructure/gcp/configs/project.env`
+- CI/CD: `/infrastructure/gcp/cloudbuild.yaml`
+- Backend Dockerfile: `/backend/Dockerfile`
+- Deployment status: `/infrastructure/GCP-DEPLOYMENT-STATUS.md`
+- DevLog: `/devlog/workstream-a1-infrastructure-setup.md`
+
+**Handoff Notes for Work Stream A2 & Stage 2:**
+- Infrastructure fully deployed and tested
+- Backend can deploy to Cloud Run using provided Dockerfile
+- Database connection string: Secret Manager key `DB_CONNECTION_STRING`
+- Redis connection string: Secret Manager key `REDIS_CONNECTION_STRING`
+- Deploy via: `gcloud builds submit` or manual Cloud Run deployment
+- All Stage 2 work streams (B1, B2, B3) can now deploy and test with real infrastructure
+- DevOps support available for deployment assistance
+
+**Archive**: See `/plans/completed/roadmap-archive.md` for complete details
+
+#### Work Stream A2: Backend Framework Setup ✅ COMPLETED
+**Agent**: Backend Engineer
+**Can Start**: Immediately (local development)
+**Dependencies**: None initially; connects to A1 by stage completion
+**Completed**: 2025-12-05
+
+#### Work Stream A4: Design System & Wireframes ✅ COMPLETED
+**Agent**: design-system-engineer (AI Agent)
+- [x] Project structure and architecture setup
+- [x] API route scaffolding
+**Completed**: 2025-12-05
+- [x] Request/response middleware
+- [x] Error handling framework
+- [x] Database ORM (SQLAlchemy) setup
+- [x] OpenAPI/Swagger documentation setup
+
+**Deliverable**: Backend skeleton with API documentation - COMPLETE
+
+**Completion Notes:**
+**Deliverable**: Design system and wireframes for all MVP screens - COMPLETE
+- Organized backend/ structure with api/, models/, middleware/, services/, utils/
+
+**Completion Notes:**
+- All 7 deliverables created: design-tokens.json, design-system.md, wireframes.md, user-flows.md, components.md, responsive-design.md, accessibility.md
+- Production-ready design system with machine-readable tokens
+- WCAG 2.1 AA compliance guidelines established
+- Ready for use by Work Stream A3 (Frontend Framework Setup)
+- Unblocks: B4 (Auth UI), C4 (Onboarding UI), C5 (Chat UI)
+- 6 API blueprints with 40+ endpoints (health, auth, users, exercises, chat, github)
+#### Work Stream A3: Frontend Framework Setup ✅ COMPLETED 2025-12-05
+- Custom APIError class, Pydantic validation, structured error responses
+- Async SQLAlchemy with 4 models (User, Exercise, Conversation, Message) and Alembic migrations
+- Interactive Swagger UI at /docs with complete OpenAPI specification
+- Documentation: backend/SETUP.md, devlog/workstream-a2-backend-framework.md
+- Ready for integration with B1 (Auth), B2 (LLM), B3 (Database), B4 (Auth UI)
+
+#### Work Stream A3: Frontend Framework Setup
+**Agent**: Frontend Engineer
+**Can Start**: Immediately
+**Dependencies**: None
+
+**Tasks:**
+- [ ] React 18 + TypeScript project initialization
+- [ ] Component library setup (Material-UI/Chakra UI)
+- [ ] State management (Redux Toolkit) configuration
+- [ ] Routing (React Router) setup
+- [ ] API client configuration
+- [ ] Responsive design foundation
+- [ ] Build tooling (Vite) configuration
+
+**Deliverable**: Frontend skeleton with component library
+
+#### Work Stream A4: Design System & Wireframes
+**Agent**: UI/UX Designer
+**Can Start**: Immediately
+**Dependencies**: None
+
+**Tasks:**
+- [ ] Design system documentation (colors, typography, spacing)
+- [ ] Wireframes for key screens (Dashboard, Chat, Exercise, Profile)
+- [ ] User flow diagrams
+- [ ] Component library design (buttons, forms, cards)
+- [ ] Responsive breakpoint specifications
+- [ ] Accessibility guidelines (WCAG 2.1 AA)
+
+**Deliverable**: Design system and wireframes for all MVP screens
+
+**INTEGRATION CHECKPOINT - Stage 1 Complete**:
+- Infrastructure deployed (A1 - In Progress)
+- Backend and frontend can communicate (A2 - COMPLETE ✅, A3 - Pending)
+- Design system ready for implementation (A4 - COMPLETE ✅)
+
+**Stage 1 Progress**: A2 completed 2025-12-05. Work streams A1, A3, A4 can continue in parallel.
+
+---
+
+### Stage 2: Core Authentication & Data Models
+
+**Goal**: Build authentication system and core data models. Multiple independent streams.
+
+#### Work Stream B1: Authentication System
+**Agent**: Backend Engineer #1
+**Can Start**: NOW (A2 complete, can develop locally; A1 needed for deployment)
+**Dependencies**: Infrastructure (A1, A2 ✅)
+**Parallel With**: B2, B3, B4
+
+**Tasks:**
+- [ ] User registration endpoint (email/password)
+- [ ] Password hashing (bcrypt)
+- [ ] Email verification flow
+- [ ] JWT token generation and validation
+- [ ] Refresh token mechanism
+- [ ] Session management with Redis
+- [ ] GitHub OAuth integration
+- [ ] Google OAuth integration
+- [ ] Account linking logic
+- [ ] RBAC middleware (Student, Mentor, Admin roles)
+- [ ] Route protection decorator
+
+**Deliverable**: Complete authentication API with OAuth providers
+
+#### Work Stream B2: LLM Integration Layer
+**Agent**: Backend Engineer #2
+**Can Start**: NOW (A2 complete, can develop locally; A1 needed for deployment)
+**Dependencies**: Infrastructure (A1, A2 ✅)
+**Parallel With**: B1, B3, B4
+
+**Tasks:**
+- [ ] OpenAI API integration
+- [ ] Anthropic Claude API integration (fallback)
+- [ ] Prompt template system
+- [ ] Token usage tracking
+- [ ] Cost monitoring and logging
+- [ ] Error handling and retries with exponential backoff
+- [ ] Response caching strategy with Redis
+- [ ] Context management (sliding window for conversations)
+- [ ] LLM provider abstraction layer (easy switching)
+
+**Deliverable**: LLM service layer with dual provider support
+
+#### Work Stream B3: Database Schema & Models
+**Agent**: Backend Engineer #3 (or #1 after auth basics)
+**Can Start**: NOW (A2 complete, can develop locally; A1 needed for deployment)
+**Dependencies**: Infrastructure (A1, A2 ✅)
+**Parallel With**: B1, B2, B4
+
+**Tasks:**
+- [ ] Users table and model
+- [ ] User_Profiles table and model
+- [ ] Exercises table and model
+- [ ] User_Exercises table and model (completion tracking)
+- [ ] Conversations table and model (chat history)
+- [ ] User_Memory table and model (personalization data)
+- [ ] Achievements table and model
+- [ ] Database migrations (Alembic)
+- [ ] Indexes for performance
+- [ ] Foreign key constraints
+
+**Deliverable**: Complete database schema with migrations
+
+#### Work Stream B4: Authentication UI
+**Agent**: Frontend Engineer
+**Can Start**: After Stage 1
+**Dependencies**: Design system (A4), Frontend framework (A3)
+**Parallel With**: B1, B2, B3
+
+**Tasks:**
+- [ ] Registration form UI
+- [ ] Login form UI
+- [ ] Email verification page
+- [ ] OAuth login buttons (GitHub, Google)
+- [ ] Password strength indicator
+- [ ] Form validation (client-side)
+- [ ] Error message display
+- [ ] Loading states
+- [ ] Responsive layout
+
+**Deliverable**: Complete authentication UI components
+
+**INTEGRATION CHECKPOINT - Stage 2 Complete**:
+- Authentication flow works end-to-end
+- LLM integration tested and working
+- Database schema deployed
+- Authentication UI integrated with backend
+
+---
+
+### Stage 3: User Onboarding & LLM Tutor
+
+**Goal**: Build onboarding interview and chat interface. High parallelization.
+
+#### Work Stream C1: Onboarding Interview Backend
+**Agent**: Backend Engineer #1
+**Can Start**: After Stage 2 (needs auth and database)
+**Dependencies**: B1 (auth), B3 (database)
+**Parallel With**: C2, C3, C4, C5
+
+**Tasks:**
+- [ ] User profile creation endpoint
+- [ ] Onboarding interview questions API
+- [ ] Save interview responses endpoint
+- [ ] Resume interview logic
+- [ ] Profile update endpoint
+- [ ] Profile retrieval endpoint
+- [ ] Validation for interview data
+
+**Deliverable**: User profile and onboarding API
+
+#### Work Stream C2: User Memory & Personalization
+**Agent**: Backend Engineer #2
+**Can Start**: After Stage 2
+**Dependencies**: B2 (LLM), B3 (database)
+**Parallel With**: C1, C3, C4, C5
+
+**Tasks:**
+- [ ] Vector database setup (Pinecone or PostgreSQL + pgvector)
+- [ ] User memory storage service
+- [ ] Profile embedding generation
+- [ ] Exercise history tracking
+- [ ] Interaction logging
+- [ ] Memory retrieval for LLM context
+- [ ] Memory update triggers (on exercise completion, chat, etc.)
+- [ ] Personalization scoring algorithm
+
+**Deliverable**: User memory and personalization engine
+
+#### Work Stream C3: LLM Tutor Backend
+**Agent**: Backend Engineer #3
+**Can Start**: After Stage 2
+**Dependencies**: B2 (LLM), C2 (memory)
+**Parallel With**: C1, C2, C4, C5
+
+**Tasks:**
+- [ ] Chat message endpoint (send/receive)
+- [ ] Conversation history storage
+- [ ] LLM tutor system prompt engineering
+- [ ] Context injection (user memory, preferences, goals)
+- [ ] Socratic method prompt refinement
+- [ ] Skill level adaptation in prompts
+- [ ] Code formatting in responses
+- [ ] Conversation history retrieval endpoint
+- [ ] Real-time response streaming (optional)
+
+**Deliverable**: LLM tutor chat API with personalization
+
+#### Work Stream C4: Onboarding Interview UI
+**Agent**: Frontend Engineer #1
+**Can Start**: After Stage 2
+**Dependencies**: A3 (frontend framework), A4 (design)
+**Parallel With**: C1, C2, C3, C5
+
+**Tasks:**
+- [ ] Multi-step interview form component
+- [ ] Question screens for:
+  - Programming language selection
+  - Skill level assessment
+  - Career goals input
+  - Learning style preferences
+  - Time commitment
+- [ ] Progress indicator
+- [ ] Save and resume functionality
+- [ ] Form validation
+- [ ] Profile edit page
+- [ ] Profile display component
+
+**Deliverable**: Complete onboarding UI flow
+
+#### Work Stream C5: Chat Interface UI
+**Agent**: Frontend Engineer #2 (or #1 time-shifted)
+**Can Start**: After Stage 2
+**Dependencies**: A3 (frontend framework), A4 (design)
+**Parallel With**: C1, C2, C3, C4
+
+**Tasks:**
+- [ ] Chat interface layout (sidebar or full-screen)
+- [ ] Message list component with scrolling
+- [ ] Message input component
+- [ ] Message bubbles (user vs. tutor)
+- [ ] Typing indicator
+- [ ] Loading states during LLM processing
+- [ ] Syntax highlighting for code snippets (Prism.js)
+- [ ] Markdown rendering in messages
+- [ ] Copy-to-clipboard for code
+- [ ] Chat history navigation
+- [ ] Responsive design for mobile
+
+**Deliverable**: Complete chat UI
+
+**INTEGRATION CHECKPOINT - Stage 3 Complete**:
+- Onboarding flow works end-to-end
+- Chat interface functional with LLM responses
+- User memory system storing and retrieving data
+- All UIs integrated with backends
+
+---
+
+### Stage 4: Daily Exercise System & Progress Tracking
+
+**Goal**: Build exercise generation, delivery, and progress tracking. Multiple parallel streams.
+
+#### Work Stream D1: Exercise Generation & Management
+**Agent**: Backend Engineer #1
+**Can Start**: After Stage 3 (needs user memory)
+**Dependencies**: C2 (user memory), C3 (LLM tutor)
+**Parallel With**: D2, D3, D4
+
+**Tasks:**
+- [ ] Exercise generation service (LLM-based)
+- [ ] Personalization based on:
+  - Language preference
+  - Skill level
+  - User interests
+  - Previous exercise history
+- [ ] Exercise types: algorithms, data structures, debugging, practical
+- [ ] Daily exercise generation job (cron/scheduled task)
+- [ ] Exercise retrieval endpoint (current day's exercise)
+- [ ] Submit exercise solution endpoint
+- [ ] Request hint endpoint (via LLM)
+- [ ] Mark exercise complete endpoint
+- [ ] Skip exercise endpoint (with limit tracking)
+- [ ] Previous exercises retrieval endpoint
+- [ ] Exercise quality rating system
+
+**Deliverable**: Complete exercise generation and management API
+
+#### Work Stream D2: Progress Tracking Backend
+**Agent**: Backend Engineer #2
+**Can Start**: After Stage 2 (needs database)
+**Dependencies**: B3 (database schema)
+**Parallel With**: D1, D3, D4
+
+**Tasks:**
+- [ ] Progress calculation service
+- [ ] Exercise completion tracking
+- [ ] Learning streak calculation (consecutive days)
+- [ ] Activity duration tracking
+- [ ] Progress metrics endpoint (total exercises, streak, etc.)
+- [ ] Progress history endpoint (exercises over time)
+- [ ] Skill level tracking per topic
+- [ ] Progress update triggers
+
+**Deliverable**: Progress tracking API
+
+#### Work Stream D3: Exercise UI Components
+**Agent**: Frontend Engineer #1
+**Can Start**: After Stage 3
+**Dependencies**: C4 (for design consistency)
+**Parallel With**: D1, D2, D4
+
+**Tasks:**
+- [ ] Exercise card component (shows daily exercise)
+- [ ] Exercise detail view
+- [ ] Exercise instructions display
+- [ ] Code submission interface (text area or mini-editor)
+- [ ] Hint request button and display
+- [ ] Submit solution button
+- [ ] Mark complete button
+- [ ] Skip exercise button
+- [ ] Previous exercises list view
+- [ ] Exercise status indicators (pending, completed, skipped)
+
+**Deliverable**: Exercise UI components
+
+#### Work Stream D4: Progress Dashboard UI
+**Agent**: Frontend Engineer #2
+**Can Start**: After Stage 3
+**Dependencies**: C5 (for design consistency)
+**Parallel With**: D1, D2, D3
+
+**Tasks:**
+- [ ] Dashboard layout
+- [ ] Quick stats widgets (total exercises, streak, activity time)
+- [ ] Exercises completed over time chart (line chart)
+- [ ] Streak calendar visualization (heat map)
+- [ ] Current exercise widget
+- [ ] Quick actions (Start Exercise, Continue Learning)
+- [ ] Progress indicators and badges display
+- [ ] Responsive dashboard layout
+
+**Deliverable**: Progress dashboard UI
+
+**INTEGRATION CHECKPOINT - Stage 4 Complete**:
+- Daily exercise generation working
+- Exercise submission and completion flow functional
+- Progress tracking updating correctly
+- Dashboard displaying accurate progress
+
+---
+
+### Stage 5: Testing, Polish & MVP Launch
+
+**Goal**: Testing, bug fixes, and MVP launch preparation. Some parallelization possible.
+
+#### Work Stream E1: Backend Testing & Bug Fixes
+**Agent**: Backend Engineers (all)
+**Can Start**: After Stage 4
+**Dependencies**: All backend work (D1, D2)
+**Parallel With**: E2, E3
+
+**Tasks:**
+- [ ] Unit tests for all services (target 80% coverage)
+- [ ] Integration tests for API endpoints
+- [ ] Authentication flow testing
+- [ ] LLM integration testing
+- [ ] Database migration testing
+- [ ] Performance testing (load tests with 100 concurrent users)
+- [ ] Bug fixes from testing
+- [ ] API documentation review and update
+
+**Deliverable**: Tested backend with 80%+ coverage
+
+#### Work Stream E2: Frontend Testing & Bug Fixes
+**Agent**: Frontend Engineers (all)
+**Can Start**: After Stage 4
+**Dependencies**: All frontend work (D3, D4)
+**Parallel With**: E1, E3
+
+**Tasks:**
+- [ ] Component unit tests
+- [ ] Integration tests for key flows
+- [ ] End-to-end tests for critical user journeys:
+  - Registration → Onboarding → First Exercise
+  - Login → Chat with Tutor → Submit Exercise
+- [ ] Cross-browser testing
+- [ ] Responsive design testing (mobile, tablet, desktop)
+- [ ] Accessibility audit (WCAG 2.1 AA)
+- [ ] Bug fixes from testing
+- [ ] UI polish and refinements
+
+**Deliverable**: Tested frontend with E2E coverage
+
+#### Work Stream E3: DevOps & Launch Preparation
+**Agent**: DevOps Engineer
+**Can Start**: After Stage 4
+**Dependencies**: E1, E2 (needs stable code)
+**Parallel With**: E1, E2
+
+**Tasks:**
+- [ ] Production deployment scripts
+- [ ] Database backup procedures
+- [ ] Monitoring dashboards setup
+- [ ] Alert configurations
+- [ ] Security scanning
+- [ ] SSL certificate verification
+- [ ] Performance optimization (CDN, caching)
+- [ ] Load balancer configuration
+- [ ] Disaster recovery testing
+- [ ] Launch checklist preparation
+
+**Deliverable**: Production-ready deployment
+
+#### Work Stream E4: User Acceptance Testing
+**Agent**: Product Owner + QA Lead
+**Can Start**: After Stage 4
+**Dependencies**: E1, E2 (needs working application)
+**Parallel With**: E3
+
+**Tasks:**
+- [ ] Internal beta testing with 10-20 users
+- [ ] User feedback collection
+- [ ] Usability testing sessions
+- [ ] Bug prioritization and triage
+- [ ] Feature acceptance verification
+- [ ] Documentation review (help docs, FAQs)
+- [ ] Launch communication preparation
+
+**Deliverable**: UAT sign-off and launch approval
+
+**MVP LAUNCH CHECKPOINT**:
+- All tests passing
+- MVP success criteria met
+- Production deployment complete
+- Beta users onboarded
+
+---
+
+## Phase 1.5: Monetization Enablement
+
+### Goal: Add payment processing and feature gating
+
+**Note**: This phase has less parallelization due to smaller scope, but still some opportunities.
+
+#### Work Stream F1: Payment Backend
+**Agent**: Backend Engineer (payment specialist preferred)
+**Can Start**: After MVP launch
+**Dependencies**: MVP auth and database
+**Parallel With**: F2, F3
+
+**Tasks:**
+- [ ] Stripe integration
+- [ ] Payment method storage (tokenized)
+- [ ] Subscription creation endpoint
+- [ ] Subscription update endpoint (upgrade/downgrade)
+- [ ] Subscription cancellation endpoint
+- [ ] Webhook handling (payment success, failure, renewal)
+- [ ] Transaction logging
+- [ ] Refund processing capability
+- [ ] Prorated billing logic
+- [ ] Feature gating middleware by tier
+
+**Deliverable**: Payment processing API
+
+#### Work Stream F2: Billing UI
+**Agent**: Frontend Engineer
+**Can Start**: After MVP launch
+**Dependencies**: MVP frontend
+**Parallel With**: F1, F3
+
+**Tasks:**
+- [ ] Subscription selection page (tier comparison)
+- [ ] Payment form (Stripe Elements)
+- [ ] Billing dashboard (current plan, usage, billing history)
+- [ ] Update payment method UI
+- [ ] Cancel subscription UI with confirmation
+- [ ] Invoice download
+- [ ] Upgrade/downgrade flow
+- [ ] Feature upsell prompts for free tier
+
+**Deliverable**: Complete billing UI
+
+#### Work Stream F3: Feature Gating & Password Reset
+**Agent**: Backend Engineer (can be different from F1)
+**Can Start**: After MVP launch
+**Dependencies**: MVP backend
+**Parallel With**: F1, F2
+
+**Tasks:**
+- [ ] Free tier limits implementation:
+  - 1 exercise per day
+  - Message limits for tutor
+  - Community read-only access
+- [ ] Basic tier feature unlocks
+- [ ] Premium tier feature unlocks
+- [ ] Usage tracking per tier
+- [ ] Password reset email flow
+- [ ] Password reset token generation
+- [ ] Password reset endpoint
+
+**Deliverable**: Feature gating and password reset
+
+**INTEGRATION CHECKPOINT - Phase 1.5 Complete**:
+- Payment processing functional
+- Subscriptions can be created and managed
+- Feature gating working correctly
+- Free to paid conversion tracked
+
+---
+
+## Phase 2: Community & Engagement
+
+### Goal: Add GitHub integration, adaptive difficulty, achievements, and community features
+
+**High parallelization opportunity**: Multiple independent feature streams.
+
+### Stage 1: GitHub & Adaptive Systems
+
+#### Work Stream G1: GitHub Integration Backend
+**Agent**: Backend Engineer #1
+**Can Start**: After Phase 1.5
+**Dependencies**: MVP auth and database
+**Parallel With**: G2, G3, G4
+
+**Tasks:**
+- [ ] GitHub OAuth for private repos (additional scope)
+- [ ] Repository URL validation endpoint
+- [ ] Repository cloning service (limited to 500MB)
+- [ ] Repository parsing and file extraction
+- [ ] LLM-based code review service
+- [ ] Code quality assessment
+- [ ] Bug identification
+- [ ] Improvement suggestions generation
+- [ ] Educational feedback formatting
+- [ ] Repository association with user accounts
+- [ ] Review history storage and retrieval
+- [ ] Re-review request handling
+
+**Deliverable**: GitHub integration and code review API
+
+#### Work Stream G2: Adaptive Difficulty Engine
+**Agent**: Backend Engineer #2
+**Can Start**: After Phase 1.5
+**Dependencies**: MVP exercise and progress tracking
+**Parallel With**: G1, G3, G4
+
+**Tasks:**
+- [ ] Performance tracking service:
+  - Completion time analysis
+  - Hints requested tracking
+  - Code quality from LLM feedback
+- [ ] Difficulty adjustment algorithm:
+  - Increase after 3 consecutive successes without hints
+  - Decrease after 2 consecutive struggles
+- [ ] Difficulty level storage and management
+- [ ] User notification service for difficulty changes
+- [ ] Difficulty override for specific exercises
+- [ ] Performance analytics
+
+**Deliverable**: Adaptive difficulty engine
+
+#### Work Stream G3: Achievement System Backend
+**Agent**: Backend Engineer #3 (or #1 time-shifted)
+**Can Start**: After Phase 1.5
+**Dependencies**: MVP progress tracking
+**Parallel With**: G1, G2, G4
+
+**Tasks:**
+- [ ] Achievement definitions and storage
+- [ ] Badge unlock detection service:
+  - Streak milestones (7, 30, 100, 365 days)
+  - Exercise milestones (10, 50, 100, 500)
+  - GitHub reviews (5, 20, 50)
+  - Community milestones
+  - Mentor/mentee badges
+- [ ] Achievement unlock notification service
+- [ ] User achievements retrieval endpoint
+- [ ] Achievement sharing endpoint
+
+**Deliverable**: Achievement system API
+
+#### Work Stream G4: GitHub & Achievements UI
+**Agent**: Frontend Engineer
+**Can Start**: After Phase 1.5
+**Dependencies**: MVP frontend
+**Parallel With**: G1, G2, G3
+
+**Tasks:**
+- [ ] GitHub repository link form
+- [ ] Repository selection for review
+- [ ] Code review results display
+- [ ] Review history view
+- [ ] Achievement badge display on profile
+- [ ] Achievement unlock celebration modal/toast
+- [ ] Achievement showcase gallery
+- [ ] Badge sharing UI
+- [ ] Difficulty change notification display
+
+**Deliverable**: GitHub and achievements UI
+
+**INTEGRATION CHECKPOINT - Stage 1 Complete**:
+- GitHub integration functional
+- Adaptive difficulty adjusting correctly
+- Achievements unlocking and displaying
+
+---
+
+### Stage 2: Matrix Community
+
+#### Work Stream H1: Matrix Server & Integration
+**Agent**: DevOps/Backend Engineer #1
+**Can Start**: After Stage 1 of Phase 2
+**Dependencies**: None (independent)
+**Parallel With**: H2, H3, H4
+
+**Tasks:**
+- [ ] Matrix server setup (managed service like Element)
+- [ ] Matrix API integration
+- [ ] User provisioning in Matrix
+- [ ] Matrix account creation for app users
+- [ ] Authentication bridge (app JWT → Matrix)
+- [ ] Room creation API
+- [ ] Room management API (join, leave, invite)
+- [ ] Message sending API
+- [ ] Message history retrieval
+- [ ] Real-time message sync
+
+**Deliverable**: Matrix integration layer
+
+#### Work Stream H2: Community Backend Services
+**Agent**: Backend Engineer #2
+**Can Start**: After Stage 1 of Phase 2
+**Dependencies**: H1 (Matrix integration)
+**Parallel With**: H1, H3, H4
+
+**Tasks:**
+- [ ] Pre-create study group rooms:
+  - By language (Python, JavaScript, Java, etc.)
+  - By skill level (Beginners, Advanced)
+  - By topic (Web Dev, Data Science, Algorithms)
+- [ ] Room browsing endpoint
+- [ ] Room membership tracking
+- [ ] Room activity monitoring
+- [ ] Moderator role assignment
+- [ ] Content moderation service
+- [ ] Report inappropriate content endpoint
+- [ ] User blocking functionality
+- [ ] Room archival for inactive rooms
+
+**Deliverable**: Community management API
+
+#### Work Stream H3: Moderation Tools Backend
+**Agent**: Backend Engineer #3
+**Can Start**: After Stage 1 of Phase 2
+**Dependencies**: H2 (community services)
+**Parallel With**: H1, H2, H4
+
+**Tasks:**
+- [ ] Moderation queue system
+- [ ] Report handling workflow
+- [ ] Automated content filtering (basic patterns)
+- [ ] Moderator actions API (warn, timeout, ban)
+- [ ] Appeal process handling
+- [ ] Moderation logs
+- [ ] Community guidelines storage and display
+
+**Deliverable**: Moderation tools API
+
+#### Work Stream H4: Community UI
+**Agent**: Frontend Engineer
+**Can Start**: After Stage 1 of Phase 2
+**Dependencies**: Phase 1.5 UI complete
+**Parallel With**: H1, H2, H3
+
+**Tasks:**
+- [ ] Community page layout
+- [ ] Room browser (list view with filters)
+- [ ] Room detail view
+- [ ] Chat interface within rooms
+- [ ] Message list with code snippet support
+- [ ] Message input with formatting
+- [ ] User presence indicators
+- [ ] Join/leave room buttons
+- [ ] Report content UI
+- [ ] Moderator controls UI
+- [ ] Room creation proposal form
+
+**Deliverable**: Community and moderation UI
+
+**INTEGRATION CHECKPOINT - Phase 2 Complete**:
+- Matrix community functional
+- Users can join rooms and chat
+- Moderation tools working
+- All Phase 2 features integrated
+
+---
+
+## Phase 3: Advanced Features
+
+### Goal: Add mentor matching, code sandbox, and automated grading
+
+**Moderate parallelization**: Some features are independent, others have dependencies.
+
+### Stage 1: Mentor System & Sandbox Foundation
+
+#### Work Stream I1: Mentor Matching Backend
+**Agent**: Backend Engineer #1
+**Can Start**: After Phase 2
+**Dependencies**: Phase 2 Matrix integration (for communication)
+**Parallel With**: I2, I3
+
+**Tasks:**
+- [ ] Mentor opt-in flow and profile
+- [ ] Mentor profile storage (expertise, availability)
+- [ ] Mentee request form endpoint
+- [ ] Matching algorithm:
+  - Based on goals, languages, availability
+  - Compatibility scoring
+- [ ] Generate 3-5 mentor recommendations
+- [ ] Match request notification system
+- [ ] Accept/decline match flow
+- [ ] Relationship status tracking (active, paused, ended)
+- [ ] Dedicated Matrix channel creation per relationship
+- [ ] Relationship termination handling
+- [ ] Feedback collection on mentorship
+- [ ] Limit enforcement (5 mentees per mentor)
+
+**Deliverable**: Mentor matching system API
+
+#### Work Stream I2: Code Sandbox Infrastructure
+**Agent**: DevOps/Backend Engineer #2 (security focus)
+**Can Start**: After Phase 2
+**Dependencies**: None (independent infrastructure)
+**Parallel With**: I1, I3
+
+**Tasks:**
+- [ ] Container infrastructure setup (Docker/Firecracker)
+- [ ] Language runtime images:
+  - Python
+  - JavaScript (Node.js)
+  - Java
+  - C++
+  - Go
+  - Rust
+- [ ] Resource limit enforcement (30s time, 512MB memory)
+- [ ] Network isolation
+- [ ] Filesystem restrictions
+- [ ] Malicious code detection (basic patterns)
+- [ ] Execution API endpoint
+- [ ] Output capture (stdout, stderr, return values)
+- [ ] Execution logging for security monitoring
+- [ ] Rate limiting per user
+- [ ] Security hardening
+
+**Deliverable**: Secure code execution sandbox
+
+#### Work Stream I3: Mentor & Sandbox UI (Early)
+**Agent**: Frontend Engineer
+**Can Start**: After Phase 2
+**Dependencies**: Phase 2 UI complete
+**Parallel With**: I1, I2
+
+**Tasks:**
+- [ ] Mentor opt-in page
+- [ ] Mentor profile creation form
+- [ ] Browse mentors page
+- [ ] Mentor profile cards
+- [ ] Request mentor flow
+- [ ] Mentor dashboard (view mentees)
+- [ ] Mentee progress view for mentors
+- [ ] Relationship communication interface
+- [ ] Code editor component (Monaco/CodeMirror) for sandbox
+- [ ] Syntax highlighting
+- [ ] Language selection dropdown
+
+**Deliverable**: Mentor and code editor UI components
+
+**INTEGRATION CHECKPOINT - Stage 1 Complete**:
+- Mentor matching functional
+- Sandbox infrastructure ready for testing
+- UI components ready
+
+---
+
+### Stage 2: Code Execution & Automated Grading
+
+#### Work Stream J1: Code Execution Integration
+**Agent**: Backend Engineer #1 (from I2)
+**Can Start**: After Stage 1 (needs sandbox ready)
+**Dependencies**: I2 (sandbox infrastructure)
+**Parallel With**: J2, J3
+
+**Tasks:**
+- [ ] Code submission endpoint for execution
+- [ ] Test case execution against user code
+- [ ] Test result aggregation (pass/fail per test)
+- [ ] Performance metrics collection (time, memory)
+- [ ] Exercise integration with sandbox
+- [ ] Execution history storage
+- [ ] Security audit and penetration testing
+- [ ] Bug fixes from security audit
+
+**Deliverable**: Code execution integrated with exercises
+
+#### Work Stream J2: Automated Grading System
+**Agent**: Backend Engineer #2
+**Can Start**: After Stage 1
+**Dependencies**: I2 (sandbox), J1 (execution integration)
+**Parallel With**: J1, J3
+
+**Tasks:**
+- [ ] LLM-based code evaluation service
+- [ ] Rubric-based assessment implementation:
+  - Correctness (40%)
+  - Code quality (30%)
+  - Efficiency (15%)
+  - Style (15%)
+- [ ] Scoring calculation (0-100 scale)
+- [ ] Feedback generation service:
+  - Overall score with breakdown
+  - Identified strengths
+  - Areas for improvement with suggestions
+  - Code snippets highlighting issues/good practices
+- [ ] Grade storage in database
+- [ ] Manual review request endpoint (Premium tier)
+- [ ] Mentor grade adjustment with justification
+- [ ] Grade appeal process
+
+**Deliverable**: Automated grading system
+
+#### Work Stream J3: Execution & Grading UI
+**Agent**: Frontend Engineer
+**Can Start**: After Stage 1
+**Dependencies**: I3 (code editor component)
+**Parallel With**: J1, J2
+
+**Tasks:**
+- [ ] Execute button integration
+- [ ] Real-time output display panel
+- [ ] Error messages with line numbers
+- [ ] Test results display (pass/fail per test)
+- [ ] Performance metrics display
+- [ ] Execution history view
+- [ ] Grade display with breakdown
+- [ ] Feedback panel with code highlighting
+- [ ] Manual review request button (Premium)
+- [ ] Grade appeal form
+
+**Deliverable**: Complete code execution and grading UI
+
+**INTEGRATION CHECKPOINT - Phase 3 Complete**:
+- Code sandbox fully functional and secure
+- Automated grading working with detailed feedback
+- All Phase 3 features integrated and tested
+
+---
+
+## Phase 4: Scale & Future Features
+
+**Note**: These features are lower priority and can be planned after Phase 3 completion.
+
+### Potential Parallel Streams for Phase 4:
+
+1. **Group Projects**: Independent feature, can be built in parallel with others
+2. **Real-Time Collaborative Editing**: Complex, requires dedicated focus, less parallelizable
+3. **Advanced Analytics**: Independent data pipeline, highly parallelizable
+4. **Enterprise Features**: Independent B2B features
+5. **Internationalization**: Can be parallelized across multiple languages
+
+---
+
+## Parallelization Summary
+
+### Maximum Concurrent Work Streams by Phase:
+
+| Phase | Max Parallel Streams | Example Concurrent Work |
+|-------|---------------------|------------------------|
+| **Phase 0: MVP** | **4-5 streams** | Infrastructure, Backend, Frontend, Design, LLM Integration |
+| **Phase 1.5: Monetization** | **3 streams** | Payment Backend, Billing UI, Feature Gating |
+| **Phase 2: Community** | **4 streams** | GitHub, Adaptive, Achievements, Matrix |
+| **Phase 3: Advanced** | **3 streams** | Mentor, Sandbox, UI Components |
+
+### Dependency Chain (Critical Path):
+
+```
+Infrastructure → Auth → User Memory → Exercise Generation → MVP Launch
+                                ↓
+                         LLM Integration → Chat Interface
+```
+
+---
+
+## Team Allocation Recommendations
+
+### Phase 0: MVP
+
+**Team Composition:**
+- **Backend Engineers**: 3 full-time
+  - Engineer #1: Auth, Onboarding, Exercise Management
+  - Engineer #2: LLM Integration, User Memory
+  - Engineer #3: Database, Progress Tracking
+- **Frontend Engineers**: 2 full-time
+  - Engineer #1: Auth UI, Onboarding UI, Exercise UI
+  - Engineer #2: Chat UI, Dashboard UI
+- **DevOps Engineer**: 1 part-time (30%)
+- **UI/UX Designer**: 1 part-time (50%, front-loaded)
+- **QA Engineer**: 1 part-time (30%, ramps to 80% in final stages)
+- **Product Owner**: 1 part-time (30%)
+
+**Total**: ~5.4 FTE
+
+### Phase 1.5: Monetization
+
+**Team Composition:**
+- **Backend Engineers**: 2 full-time
+- **Frontend Engineers**: 1 full-time
+- **QA Engineer**: 1 part-time (50%)
+- **Product Owner**: 1 part-time (20%)
+
+**Total**: ~3.7 FTE
+
+### Phase 2: Community
+
+**Team Composition:**
+- **Backend Engineers**: 3 full-time
+- **Frontend Engineers**: 2 full-time
+- **DevOps Engineer**: 1 part-time (40% for Matrix setup)
+- **QA Engineer**: 1 part-time (50%)
+- **Community Manager**: 1 part-time (30%, ramps up)
+- **Product Owner**: 1 part-time (30%)
+
+**Total**: ~6.0 FTE
+
+### Phase 3: Advanced
+
+**Team Composition:**
+- **Backend Engineers**: 3 full-time (one with security focus)
+- **Frontend Engineers**: 1 full-time
+- **DevOps Engineer**: 1 part-time (50% for sandbox infrastructure)
+- **Security Specialist**: 1 part-time (30% for audit)
+- **QA Engineer**: 1 full-time (security testing)
+- **Product Owner**: 1 part-time (30%)
+
+**Total**: ~6.3 FTE
+
+---
+
+## Risk Management & Contingencies
+
+### Critical Path Risks
+
+**Risk 1: LLM Integration Delays**
+- **Impact**: Blocks C3, D1 (core features)
+- **Mitigation**: Start LLM integration early, parallel work stream B2
+- **Contingency**: Use simpler prompts initially, iterate later
+
+**Risk 2: Matrix Integration Complexity**
+- **Impact**: Delays Phase 2 community features
+- **Mitigation**: Use managed Matrix service (Element), dedicate experienced engineer
+- **Contingency**: Build simple custom chat as fallback
+
+**Risk 3: Sandbox Security Issues**
+- **Impact**: Cannot launch code execution feature
+- **Mitigation**: Early security audit, use proven container solutions
+- **Contingency**: Defer to Phase 4 or partner with existing sandbox provider
+
+### Parallelization Risks
+
+**Risk 1: Integration Complexity**
+- **Challenge**: More parallel streams = more integration points
+- **Mitigation**: Clear API contracts, integration checkpoints, automated testing
+- **Checkpoint Frequency**: Regular integration days
+
+**Risk 2: Communication Overhead**
+- **Challenge**: More teams = more coordination needed
+- **Mitigation**: Daily standups, clear work stream ownership, shared documentation
+- **Tool**: Slack channels per work stream, shared project board
+
+**Risk 3: Dependency Blocking**
+- **Challenge**: One delayed stream can block multiple others
+- **Mitigation**: Identify critical path early, buffer for critical dependencies
+- **Monitoring**: Regular dependency reviews
+
+---
+
+## Success Metrics & Checkpoints
+
+### Phase 0: MVP Success Criteria
+- [ ] All authentication flows working (email, OAuth)
+- [ ] LLM tutor responding within 5 seconds
+- [ ] Daily exercises generating and personalizing correctly
+- [ ] User memory system storing and retrieving data
+- [ ] Progress tracking updating accurately
+- [ ] 100 active beta users
+- [ ] 70% 7-day retention
+- [ ] 4.0+ satisfaction score
+- [ ] 60%+ exercise completion rate
+
+### Phase 1.5: Monetization Success Criteria
+- [ ] Payment processing functional
+- [ ] 5%+ free-to-paid conversion
+- [ ] Zero payment failures
+- [ ] Feature gating working correctly
+- [ ] $1,000+ MRR
+
+### Phase 2: Community Success Criteria
+- [ ] GitHub integration working for public and private repos
+- [ ] Adaptive difficulty adjusting correctly
+- [ ] Achievements unlocking and displaying
+- [ ] Matrix community functional with active rooms
+- [ ] 50% of users active in community
+- [ ] 30+ active mentors
+- [ ] 75% 30-day retention
+
+### Phase 3: Advanced Features Success Criteria
+- [ ] Mentor matching system functional with 80% success rate
+- [ ] Code sandbox secure and working for all supported languages
+- [ ] Automated grading providing detailed feedback
+- [ ] 40% of users using code sandbox
+- [ ] 80% 30-day retention
+- [ ] $15,000+ MRR
+
+---
+
+## Recommendations for Maximum Parallelization
+
+### 1. Establish Clear API Contracts Early
+- Define all API endpoints in OpenAPI spec before implementation
+- Frontend and backend teams work from shared contract
+- Mock APIs for frontend development while backend builds
+
+### 2. Use Feature Flags
+- Deploy incomplete features behind flags
+- Allows continuous integration without blocking releases
+- Teams can merge work without waiting for full completion
+
+### 3. Automated Testing is Critical
+- Each work stream must have test coverage
+- Integration tests run automatically on each merge
+- Prevents one team's changes from breaking another's work
+
+### 4. Regular Integration Checkpoints
+- Regular integration days where all streams merge and test
+- Identify integration issues early
+- Adjust priorities if critical path at risk
+
+### 5. Clear Work Stream Ownership
+- Each stream has a designated owner/lead
+- Owner responsible for delivery, communication, and dependencies
+- Reduces coordination overhead
+
+### 6. Documentation as You Build
+- API documentation updates with code changes
+- README files for each major component
+- Makes handoffs and integrations smoother
+
+### 7. Prioritize Critical Path
+- If resources are limited, staff critical path streams first
+- Other streams can be delayed without blocking MVP
+- Example: LLM integration is critical; achievements are not
+
+---
+
+## Appendix: Work Stream Dependencies Matrix
+
+| Work Stream | Depends On | Blocks | Can Parallel With | Status |
+|-------------|-----------|--------|-------------------|---------|
+| **A1: Infrastructure** | None | All other streams (eventually) | A2, A3, A4 | In Progress |
+| **A2: Backend Framework** | None | B1, B2, B3 | A1, A3, A4 | ✅ COMPLETE (2025-12-05) |
+| **A3: Frontend Framework** | None | B4, C4, C5 | A1, A2, A4 | Pending |
+| **A4: Design System** | None | B4, C4, C5 | A1, A2, A3 | Pending |
+| **B1: Authentication** | A1, A2 ✅ | C1, C4 | B2, B3, B4 | Ready to Start |
+| **B2: LLM Integration** | A1, A2 ✅ | C2, C3 | B1, B3, B4 | Ready to Start |
+| **B3: Database Schema** | A1, A2 ✅ | C1, C2 | B1, B2, B4 | Ready to Start |
+| **B4: Auth UI** | A3, A4 | None | B1, B2, B3 |
+| **C1: Onboarding Backend** | B1, B3 | None | C2, C3, C4, C5 |
+| **C2: User Memory** | B2, B3 | C3, D1 | C1, C3, C4, C5 |
+| **C3: LLM Tutor Backend** | B2, C2 | D1 | C1, C2, C4, C5 |
+| **C4: Onboarding UI** | A3, A4, B4 | None | C1, C2, C3, C5 |
+| **C5: Chat UI** | A3, A4, B4 | None | C1, C2, C3, C4 |
+| **D1: Exercise Generation** | C2, C3 | E1 | D2, D3, D4 |
+| **D2: Progress Tracking** | B3 | E1 | D1, D3, D4 |
+| **D3: Exercise UI** | C4 | E2 | D1, D2, D4 |
+| **D4: Dashboard UI** | C5 | E2 | D1, D2, D3 |
+
+---
+
+## Document Control
+
+**File Name:** roadmap.md
+**Location:** /Users/annhoward/src/llm_tutor/plans/roadmap.md
+**Version:** 1.1
+**Date:** 2025-12-05
+**Status:** Draft
+**Classification:** Internal
+
+**Related Documents:**
+- requirements.md (v1.1) - Source requirements
+- priorities.md (v1.0) - Feature prioritization
+
+**Approval Required From:**
+- [ ] Product Owner - Roadmap alignment with business goals
+- [ ] Engineering Lead - Technical feasibility
+- [ ] Project Manager - Resource allocation
+- [ ] CTO - Technical architecture and risk management
+
+---
+
+**END OF DOCUMENT**
